@@ -27,7 +27,7 @@ jobs:
             AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY }}"
             AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           run: |
-            echo "AWS credentials configured"
+            echo "${AWS_ACCESS_KEY_ID} "
 
         - name: Terraform Init
           run: |
