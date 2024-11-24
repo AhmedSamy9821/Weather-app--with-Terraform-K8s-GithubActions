@@ -1,0 +1,41 @@
+name: Terraform Infrastructure Deployment
+on:
+    workflow_dispatch:
+        inputs:
+            env:
+                description: Environment
+                required: true
+                type: choice
+                options:
+                    - prod
+                    - dev
+
+jobs:
+    build_infra:
+        runs-on: ubuntu-latest
+    
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+          
+
+        - name: setup-terraform
+          uses: hashicorp/setup-terraform@v3
+
+        - name: Configure AWS Credentials
+          env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          run: |
+            echo "AWS credentials configured"
+
+        - name: Terraform Init
+          run: |
+            cd ./Terraform/main
+            terraform init -backend-config="../conf/${{ inputs.env }}_backend_conf.hcl" 
+
+        - name: Terraform apply
+          run: terraform apply -var-file="../conf/${{ inputs.env }}.tfvars"  --auto-approve 
+
+
+          
