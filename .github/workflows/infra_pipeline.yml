@@ -21,23 +21,17 @@ jobs:
 
         - name: setup-terraform
           uses: hashicorp/setup-terraform@v3
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-        - name: Debug Environment Variables
-          run: printenv | grep AWS
 
         - name: Terraform Init
           env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+            AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           run: |
             cd ./Terraform/main
-            terraform init -backend-config="../conf/${{ inputs.env }}_backend_conf.hcl" 
+            terraform init -backend-config="../conf/${{inputs.env}}_backend_conf.hcl" 
 
         - name: Terraform apply
-          run: terraform apply -var-file="../conf/${{ inputs.env }}.tfvars"  --auto-approve 
+          run: terraform apply -var-file="../conf/${{inputs.env}}.tfvars"  --auto-approve 
 
 
           
