@@ -16,5 +16,5 @@ variable "subnet_cidrs" {
 
 variable "availability_zones" {
   type = list(string)
-  default = [ "eun1-az1"," eun1-az2 "," eun1-az3" ]
+  default = [ "eu-north-1a"," eu-north-1b "," eu-north-1c" ]
 }
