@@ -29,6 +29,9 @@ jobs:
           run: |
             cd ./Terraform/main
             terraform init -backend-config="../conf/${{inputs.env}}_backend_conf.hcl" 
+        
+        - name: check where path of shell
+          run: pwd
 
         - name: Terraform apply
           run: terraform apply -var-file="../conf/${{inputs.env}}.tfvars"  --auto-approve 
