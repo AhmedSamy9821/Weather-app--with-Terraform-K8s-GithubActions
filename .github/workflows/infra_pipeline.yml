@@ -1,6 +1,9 @@
 name: Terraform Infrastructure Deployment
 on:
-    workflow_dispatch:
+  push:
+    branches: "main"
+    
+  workflow_dispatch:
         inputs:
             env:
                 description: Environment
