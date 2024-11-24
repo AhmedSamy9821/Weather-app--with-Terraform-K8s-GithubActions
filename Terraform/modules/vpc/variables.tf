@@ -13,3 +13,8 @@ variable "subnet_cidrs" {
   type        = list(string)
   default     = ["10.10.1.0/24", "10.10.2.0/24", "10.10.3.0/24", "10.10.4.0/24"]
 }
+
+variable "availability_zones" {
+  type = list(string)
+  default = [ "eun1-az1"," eun1-az2 "," eun1-az3" ]
+}

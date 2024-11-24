@@ -41,6 +41,7 @@ resource "aws_route_table" "k8s_dev_rt" {
 
 resource "aws_subnet" "dev_subnet" {
     vpc_id     = aws_vpc.k8s_dev_vpc.id
+    availability_zone       = var.availability_zones[count.index % length(var.availability_zones)]
     map_public_ip_on_launch = true
     count      = length(var.subnet_cidrs)
     cidr_block = var.subnet_cidrs[count.index]
