@@ -4,6 +4,8 @@
 module "vpc" {
   source = "../modules/vpc"
   env = var.env
+  vpc_cider = var.vpc_cider
+  subnet_cidrs = var.subnet_cidrs
 }
 
 ##############
