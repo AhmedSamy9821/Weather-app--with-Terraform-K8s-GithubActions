@@ -35,6 +35,9 @@ jobs:
 
         - name: Terraform apply
           run: terraform apply -var-file="./Terraform/conf/${{inputs.env}}.tfvars"  --auto-approve 
+          env:
+            AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+            AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
 
           
