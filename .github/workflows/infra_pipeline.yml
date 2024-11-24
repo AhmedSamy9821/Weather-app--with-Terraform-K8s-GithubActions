@@ -34,7 +34,7 @@ jobs:
           run: pwd
 
         - name: Terraform apply
-          run: terraform apply -var-file="../conf/${{inputs.env}}.tfvars"  --auto-approve 
+          run: terraform apply -var-file="./Terraform/conf/${{inputs.env}}.tfvars"  --auto-approve 
 
 
           
