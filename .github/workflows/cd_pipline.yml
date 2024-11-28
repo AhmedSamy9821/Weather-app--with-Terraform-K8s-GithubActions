@@ -16,6 +16,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: join the eks cluster
+      run: aws eks --region eu-north-1 update-kubeconfig --name weather-cluster-dev
+
     - name: install nginx ingress controller
       run: |
         kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.0-beta.0/deploy/static/provider/cloud/deploy.yaml
