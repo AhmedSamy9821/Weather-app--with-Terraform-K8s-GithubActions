@@ -1,0 +1,26 @@
+name: CD pipline
+on:
+    push:
+      branches:
+      - main
+    workflow_run:
+      workflows: [CI pipline]
+      types:
+        - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: install nginx ingress controller
+      run: |
+        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.0-beta.0/deploy/static/provider/cloud/deploy.yaml
+        kubectl wait --namespace ingress-nginx \
+        --for=condition=ready pod \
+        --selector=app.kubernetes.io/component=controller \
+        --timeout=120s
+        kubectl get pods --namespace=ingress-nginx
