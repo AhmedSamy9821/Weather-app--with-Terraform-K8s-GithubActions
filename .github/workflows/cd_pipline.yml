@@ -38,5 +38,4 @@ jobs:
       env:
             AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
             AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-      run: kubectl create secret generic mysql-secret \
-            --from-literal=root-password='${{secrets.MYSQL_ROOT_PASSWORD}}' --from-literal=auth-password='${{secrets.MYSQL_AUTH_PASSWORD}}' --from-literal=secret-key='${{secrets.AUTH_SECRET_KEY}}'
+      run: kubectl create secret generic mysql-secret  --from-literal=root-password='${{secrets.MYSQL_ROOT_PASSWORD}}' --from-literal=auth-password='${{secrets.MYSQL_AUTH_PASSWORD}}' --from-literal=secret-key='${{secrets.AUTH_SECRET_KEY}}'
