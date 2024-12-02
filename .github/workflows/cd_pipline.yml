@@ -32,6 +32,7 @@ jobs:
 
     - name: Create mysql-secret
       run: kubectl create secret generic mysql-secret  --from-literal=root-password='${{secrets.MYSQL_ROOT_PASSWORD}}' --from-literal=auth-password='${{secrets.MYSQL_AUTH_PASSWORD}}' --from-literal=secret-key='${{secrets.AUTH_SECRET_KEY}}'
+      continue-on-error: true
 
     - name: deploy mysql
       run: |
@@ -40,4 +41,8 @@ jobs:
         kubectl get pods 
         kubectl get svc
 #be sure that pods and services up
+
+    - name: Run the init job to create the auth service user
+      run: |
+        
     
