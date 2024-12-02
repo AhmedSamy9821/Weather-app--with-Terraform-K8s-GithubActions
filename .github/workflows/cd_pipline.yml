@@ -1,8 +1,5 @@
 name: CD pipline
 on:
-    push:
-      branches:
-      - main
     workflow_run:
       workflows: [CI pipline]
       types:
