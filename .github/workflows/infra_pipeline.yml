@@ -1,4 +1,4 @@
-name: Terraform Infrastructure Deployment
+name: Infrastructure Pipeline
 on:
   workflow_dispatch:
         inputs:

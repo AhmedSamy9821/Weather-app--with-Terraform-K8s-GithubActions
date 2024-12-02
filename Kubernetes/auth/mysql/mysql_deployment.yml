@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: default 
+  labels:
+    app: weather_app
+    service: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weather_app
+      service: mysql
+  template:
+    metadata:
+      labels:
+        app: weather_app
+        service: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:latest 
+        ports:
+        - containerPort: 3306 
+        env: 
+        - name: MYSQL_ROOT_PASSWORD
+          value: ${{secrets.MYSQL_ROOT_PASSWORD}}
+        - name: MYSQL_AUTH_PASSWORD
+          value: ${{secrets.MYSQL_AUTH_PASSWORD}}
+        - name: MYSQL_USER
+          value: authuser
+        - name: MYSQL_PASSWORD
+          value: ${{secrets.MYSQL_AUTH_PASSWORD}}
+
+        readinessProbe: # Optional readiness probe
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe: # Optional liveness probe
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
