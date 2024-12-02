@@ -36,13 +36,13 @@ jobs:
 
     - name: deploy mysql
       run: |
-        kubectl apply -f ./Kubernetes/auth/mysql/mysql_deployment.yml
+        kubectl apply -f ./Kubernetes/auth/mysql/mysql_StatefulSet.yml
         kubectl apply -f ./Kubernetes/auth/mysql/mysql_service.yml 
         kubectl get pods 
         kubectl get svc
 #be sure that pods and services up
 
-    - name: Run the init job to create the auth service user
-      run: |
+   # - name: Run the init job to create the auth service user
+    #  run: |
         
     
