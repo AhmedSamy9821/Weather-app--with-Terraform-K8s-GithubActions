@@ -21,7 +21,7 @@ jobs:
     - name: join the eks cluster
       run: aws eks --region eu-north-1 update-kubeconfig --name weather-cluster-dev
 
-    - name: install nginx ingress controller
+    - name: install nginx ingress controller and EBS CSI Driver
       run: |
         kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.0-beta.0/deploy/static/provider/cloud/deploy.yaml
         kubectl wait --namespace ingress-nginx \
@@ -29,6 +29,8 @@ jobs:
         --selector=app.kubernetes.io/component=controller \
         --timeout=120s
         kubectl get pods --namespace=ingress-nginx
+        kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.14"
+
 
     - name: Create mysql-secret
       run: kubectl create secret generic mysql-secret  --from-literal=root-password='${{secrets.MYSQL_ROOT_PASSWORD}}' --from-literal=auth-password='${{secrets.MYSQL_AUTH_PASSWORD}}' --from-literal=secret-key='${{secrets.AUTH_SECRET_KEY}}'
