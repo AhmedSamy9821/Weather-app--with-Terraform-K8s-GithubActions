@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: mysql
 spec:
@@ -27,12 +27,7 @@ spec:
         volumeMounts:
         - name: mysql-data
           mountPath: /var/lib/mysql
-  volumeClaimTemplates:
-  - metadata:
-      name: mysql-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: gp2
-      resources:
-        requests:
-          storage: 5Gi
+      volumes:
+      - name: mysql-data-pvc
+        persistentVolumeClaim:
+          claimName: mysql-data
