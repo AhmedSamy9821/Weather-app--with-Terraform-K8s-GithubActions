@@ -4,11 +4,7 @@ metadata:
   name: mysql-data-pvc
 spec:
   accessModes: [ "ReadWriteOnce" ]
-  storageClassName: gp2
+  storageClassName: ebs-gp2
   resources:
     requests:
       storage: 10Gi
-  Annotations: 
-    volume.beta.kubernetes.io/storage-provisioner: aws-ebs
-    volume.kubernetes.io/selected-node: ip-10-10-4-116.eu-north-1.compute.internal
-    volume.kubernetes.io/storage-provisioner: aws-ebs

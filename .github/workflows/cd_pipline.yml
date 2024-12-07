@@ -37,6 +37,7 @@ jobs:
 
     - name: deploy mysql
       run: |
+        kubectl apply -f ./Kubernetes/auth/mysql/mysql_sc.yml
         kubectl apply -f ./Kubernetes/auth/mysql/mysql_pvc.yml
         kubectl apply -f ./Kubernetes/auth/mysql/mysql_deployment.yml
         kubectl apply -f ./Kubernetes/auth/mysql/mysql_service.yml 
