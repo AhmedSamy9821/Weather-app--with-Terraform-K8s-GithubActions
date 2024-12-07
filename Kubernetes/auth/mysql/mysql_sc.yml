@@ -1,4 +1,4 @@
-piVersion: storage.k8s.io/v1
+apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: ebs-gp2
