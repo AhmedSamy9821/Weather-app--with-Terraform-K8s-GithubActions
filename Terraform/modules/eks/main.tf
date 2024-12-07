@@ -33,6 +33,11 @@ resource "aws_iam_role_policy_attachment" "eks-cluster-role-AmazonEKSVPCResource
   role       = aws_iam_role.eks-cluster-role.name
 }
 
+resource "aws_iam_role_policy_attachment" "eks-cluster-role-AmazonEBSCSIDriverPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  role       = aws_iam_role.eks-cluster-role.name
+}
+
 
 #Create Eks cluster
 resource "aws_eks_cluster" "weather-cluster" {
@@ -90,10 +95,6 @@ resource "aws_iam_role_policy_attachment" "eks-nodegroup-role-AmazonEC2Container
   role       = aws_iam_role.eks-nodegroup-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks-nodegroup-role-AmazonEBSCSIDriverPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-  role       = aws_iam_role.eks-nodegroup-role.name
-}
 
 #create node group
 resource "aws_eks_node_group" "weather-nodegroup" {
