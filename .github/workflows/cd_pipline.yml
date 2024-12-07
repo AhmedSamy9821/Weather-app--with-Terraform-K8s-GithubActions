@@ -29,6 +29,8 @@ jobs:
         --selector=app.kubernetes.io/component=controller \
         --timeout=120s
         kubectl get pods --namespace=ingress-nginx
+        kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.14"
+
 
 
     - name: Create mysql-secret
