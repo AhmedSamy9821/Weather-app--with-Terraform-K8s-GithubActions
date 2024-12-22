@@ -145,7 +145,7 @@ resource "aws_iam_role" "EBS-role" {
         {
           "Effect": "Allow",
           "Principal": {
-            "Federated": "arn:aws:iam::637423498743:${local.OIDC}"
+            "Federated": "arn:aws:iam::637423498743:oidc-provider/${local.OIDC}"
           },
           "Action": "sts:AssumeRoleWithWebIdentity",
           "Condition": {
