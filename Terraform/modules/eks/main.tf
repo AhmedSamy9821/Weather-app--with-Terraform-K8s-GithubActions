@@ -133,7 +133,7 @@ resource "aws_eks_node_group" "weather-nodegroup" {
 
 
 locals {
-  OIDC = replace(aws_eks_cluster.weather-cluster.identity.oidc.issuer, "https://", "")
+  OIDC = replace(aws_eks_cluster.weather-cluster.identity[0].oidc[0].issuer, "https://", "")
 }
 
 resource "aws_iam_role" "EBS-role" {
