@@ -1,4 +1,4 @@
- ##############
+##############
 #vpc module creates vpc and 4 public subnets for eks cluster
 ############## 
  module "vpc" {
