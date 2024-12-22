@@ -29,7 +29,7 @@ jobs:
         --selector=app.kubernetes.io/component=controller \
         --timeout=120s
         kubectl get pods --namespace=ingress-nginx
-        kubectl apply ./Kubernetes/pre_req/ebs_csi_driver_sa.yml
+        kubectl apply -f ./Kubernetes/pre_req/ebs_csi_driver_sa.yml
         kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.14"
 
 
