@@ -166,6 +166,13 @@ resource "aws_eks_addon" "pod-identity-agent" {
   resolve_conflicts_on_update = "PRESERVE"
 }
 
+#Create Pod Identity Association
+resource "aws_eks_pod_identity_association" "ebs-add-on-pod-Identity-Association" {
+  cluster_name     = data.aws_eks_cluster.weather-cluster.name
+  namespace        = "kube-system"
+  service_account  = "ebs-csi-controller-sa"    # Service account in cluster
+  role_arn         = aws_iam_role.EBS-role.arn # IAM role ARN
+}
 #aws-ebs-csi-driver add-on
 resource "aws_eks_addon" "aws-ebs-csi-driver" {
   cluster_name = aws_eks_cluster.weather-cluster.name
