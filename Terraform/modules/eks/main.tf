@@ -136,9 +136,6 @@ resource "aws_iam_role" "EBS-role" {
   name = "AmazonEKS_EBS_CSI_DriverRole"
 
   assume_role_policy = jsonencode({
-      "Version": "2012-10-17",
-      "Statement": [
-        {
             "Version": "2012-10-17",
             "Statement": [
                 {
@@ -152,9 +149,7 @@ resource "aws_iam_role" "EBS-role" {
                     ]
                 }
             ]
-        }
-      ]
-    })
+        })
 }
 
 resource "aws_iam_role_policy_attachment" "EBS-role-attachment" {
