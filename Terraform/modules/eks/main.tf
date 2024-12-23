@@ -128,14 +128,10 @@ resource "aws_eks_node_group" "weather-nodegroup" {
   }
 }
 
+#create add-ons to manage EBS
 
-#Attach EBS IAM role to OIDC to be able to manage EBS
 
-
-locals {
-  OIDC = replace(aws_eks_cluster.weather-cluster.identity[0].oidc[0].issuer, "https://", "")
-}
-
+#Attach EBS managed policy to IAM role which associated to aws-ebs-csi-driver add-on 
 resource "aws_iam_role" "EBS-role" {
   name = "AmazonEKS_EBS_CSI_DriverRole"
 
@@ -143,17 +139,19 @@ resource "aws_iam_role" "EBS-role" {
       "Version": "2012-10-17",
       "Statement": [
         {
-          "Effect": "Allow",
-          "Principal": {
-            "Federated": "arn:aws:iam::637423498743:oidc-provider/${local.OIDC}"
-          },
-          "Action": "sts:AssumeRoleWithWebIdentity",
-          "Condition": {
-            "StringEquals": {
-              "${local.OIDC}:aud": "sts.amazonaws.com",
-              "${local.OIDC}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
-            }
-          }
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "pods.eks.amazonaws.com"
+                    },
+                    "Action": [
+                        "sts:AssumeRole",
+                        "sts:TagSession"
+                    ]
+                }
+            ]
         }
       ]
     })
@@ -162,5 +160,22 @@ resource "aws_iam_role" "EBS-role" {
 resource "aws_iam_role_policy_attachment" "EBS-role-attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
   role       = aws_iam_role.EBS-role.name
+}
+
+#Add aws-ebs-csi-driver and eks-pod-identity-agent add-ons
+
+#eks-pod-identity-agent add-on
+resource "aws_eks_addon" "pod-identity-agent" {
+  cluster_name = aws_eks_cluster.weather-cluster.name
+  addon_name   = "eks-pod-identity-agent"
+  resolve_conflicts_on_update = "PRESERVE"
+}
+
+#aws-ebs-csi-driver add-on
+resource "aws_eks_addon" "aws-ebs-csi-driver" {
+  cluster_name = aws_eks_cluster.weather-cluster.name
+  addon_name   = "aws-ebs-csi-driver"
+  resolve_conflicts_on_update = "PRESERVE"
+  service_account_role_arn = aws_iam_role.EBS-role.arn
 }
 
