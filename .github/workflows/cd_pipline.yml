@@ -52,7 +52,6 @@ jobs:
     - name: Ensure that our user has access to the weahterapp database
       run: |
         kubectl exec -it mysql-0 -- mysql -u authuser -p${{secrets.MYSQL_AUTH_PASSWORD}}
-        
         SHOW DATABASES;
         USE weatherapp;
     
