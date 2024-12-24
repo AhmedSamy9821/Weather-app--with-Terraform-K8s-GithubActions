@@ -46,6 +46,7 @@ jobs:
     - name: Run the init job to create the auth service user
       run: |
         kubectl wait --for=condition=Running pod/mysql-0
+        sleep 30
         kubectl apply -f ./Kubernetes/auth/mysql/mysql-init-job.yml
         kubectl get pods 
      # ensure that the job has completed
