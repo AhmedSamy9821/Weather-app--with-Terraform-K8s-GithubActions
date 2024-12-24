@@ -45,11 +45,13 @@ jobs:
 
     - name: Run the init job to create the auth service user
       run: |
+        kubectl wait --for=condition=Running pod/mysql-0
         kubectl apply -f ./Kubernetes/auth/mysql/mysql-init-job.yml
         kubectl get pods 
      # ensure that the job has completed
 
     - name: Ensure that our user has access to the weahterapp database
       run: |
+        kubectl wait --for=condition=Complete job/mysql-init-job
         kubectl exec -it mysql-0 -- mysql -u authuser -p${{secrets.MYSQL_AUTH_PASSWORD}} -e "SHOW DATABASES; USE weatherapp; SHOW TABLES;"
     
