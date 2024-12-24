@@ -1,5 +1,4 @@
-/*
-##############
+/*##############
 #vpc module creates vpc and 4 public subnets for eks cluster
 ############## 
  module "vpc" {
@@ -30,5 +29,5 @@ module "certificate" {
   env = var.env
   sub_domain = var.sub_domain
   domain = var.domain
-}
+} 
  */
