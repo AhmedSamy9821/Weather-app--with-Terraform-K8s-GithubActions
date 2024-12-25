@@ -81,6 +81,28 @@ jobs:
         kubectl apply -f ./Kubernetes/UI/ui_deployment.yml
         kubectl apply -f ./Kubernetes/UI/ui_service.yml
         kubectl apply -f ./Kubernetes/UI/ui_ingress.yml
-        kubectl wait --for=condition=available deployment/ui_deployment
+        kubectl wait --for=condition=available deployment/weatherapp-ui
         kubectl get pods 
         kubectl get svc
+
+    - name: create record of ingress load balancer
+      run: |
+        aws route53 change-resource-record-sets \
+        --hosted-zone-id ZXXXXXXXXXXXXXX \  # Replace with your Hosted Zone ID
+        --change-batch '{
+           "Comment": "Create alias record for Ingress hostname",
+            "Changes": [
+             {
+        "Action": "UPSERT",
+        "ResourceRecordSet": {
+          "Name": "weather.dev.ahmedsamy.link",
+          "Type": "A",
+          "AliasTarget": {
+            "HostedZoneId": "Z32O12XQLNTSW2", # ELB Hosted Zone ID for eu-north-1
+            "DNSName": "'$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')'",
+            "EvaluateTargetHealth": false
+          }
+        }
+      }
+    ]
+  }'
