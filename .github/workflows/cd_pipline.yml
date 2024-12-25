@@ -55,4 +55,16 @@ jobs:
       run: |
         kubectl wait --for=condition=Complete job/mysql-init-job
         kubectl exec -it mysql-0 -- mysql -u authuser -p${{secrets.MYSQL_AUTH_PASSWORD}} -e "SHOW DATABASES; USE weatherapp; SHOW TABLES;"
-    
+
+    - name: deploy auth service
+      run: |
+        kubectl apply -f ./Kubernetes/auth/auth_deployment.yml
+        kubectl apply -f ./Kubernetes/auth/auth_service.yml
+        kubectl get pods 
+        kubectl get svc
+
+    - name: Test that the auth service is running
+      run: |
+        kubectl wait --for=condition=ready deploymnet/weatherapp-auth --timeout=120s
+        sleep 30
+        kubectl run alpine --rm -it --image=curlimages/curl:latest -- curl -X POST http://weatherapp-auth:8080/users -H "Content-Type: application/json" -d '{"username": "testuser", "password": "testpassword"}'
