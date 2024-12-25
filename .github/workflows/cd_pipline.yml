@@ -65,7 +65,6 @@ jobs:
 
     - name: Test that the auth service is running
       run: |
-        kubectl wait --for=condition=available deployment/weatherapp-auth --timeout=120s
         sleep 30
         kubectl run alpine --rm -it --image=curlimages/curl:latest -- curl -X POST http://weatherapp-auth:8080/users -H "Content-Type: application/json" -d '{"user_name": "backendtest", "user_password": "testpassword"}'
 
