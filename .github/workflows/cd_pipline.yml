@@ -85,11 +85,19 @@ jobs:
         kubectl get pods 
         kubectl get svc
 
-#    - name: create record of ingress load balancer
- #     run: |
-#        aws route53 change-resource-record-sets \
-#       --hosted-zone-id ZXXXXXXXXXXXXXX \  # Replace with your Hosted Zone ID
- ##         "Comment": "Create alias record for Ingress hostname",
+    - name: attach the ingress load balancer with domain and encrypt the traffic using https
+      run: |
+        HttpInstancePort=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.spec.ports[0].nodePort}')
+        CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='dev.weather.ahmedsamy.link'].CertificateArn" --output text)
+        DNS_Name=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        LB_ARN=$(aws elbv2 describe-load-balancers --query "LoadBalancers[?DNSName=='$DNS_Name'].LoadBalancerArn" --output text)
+        Listner_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query 'Listeners[1].ListenerArn' --output text)
+
+        aws elbv2 modify-listener --listener-arn $Listner_ARN --protocol HTTPS --port 443 --certificates CertificateArn=$CERT_ARN
+        
+
+#        aws route53 change-resource-record-sets --hosted-zone-id ZXXXXXXXXXXXXXX \ --change-batch  # Replace with your Hosted Zone ID
+ ##        { "Comment": "Create alias record for Ingress hostname",
    #         "Changes": [
     #         {
      #   "Action": "UPSERT",
