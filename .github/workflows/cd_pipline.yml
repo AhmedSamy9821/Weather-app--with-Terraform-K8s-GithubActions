@@ -88,11 +88,15 @@ jobs:
     - name: attach the ingress load balancer with domain and encrypt the traffic using https
       run: |
         HttpInstancePort=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.spec.ports[0].nodePort}')
+        echo $HttpInstancePort
         CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='dev.weather.ahmedsamy.link'].CertificateArn" --output text)
+        echo $CERT_ARN
         DNS_Name=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        echo $DNS_Name
         LB_ARN=$(aws elbv2 describe-load-balancers --query "LoadBalancers[?DNSName=='$DNS_Name'].LoadBalancerArn" --output text)
-        Listner_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query 'Listeners[1].ListenerArn' --output text)
-
+        echo $LB_ARN
+        Listner_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $(LB_ARN) --query 'Listeners[1].ListenerArn' --output text)
+        echo $Listner_ARN
         aws elbv2 modify-listener --listener-arn $Listner_ARN --protocol HTTPS --port 443 --certificates CertificateArn=$CERT_ARN
         
 
