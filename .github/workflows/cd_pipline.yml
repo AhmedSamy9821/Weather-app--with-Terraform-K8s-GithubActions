@@ -93,7 +93,7 @@ jobs:
         echo $CERT_ARN
         DNS_Name=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
         echo $DNS_Name
-        LB_ARN=$(aws elbv2 describe-load-balancers --query "LoadBalancers[?DNSName=='$DNS_Name'].LoadBalancerArn" --output text)
+        LB_ARN=$(aws elb describe-load-balancers --query "LoadBalancers[?DNSName=='$DNS_Name'].LoadBalancerArn" --output text)
         echo $LB_ARN
         Listner_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $(LB_ARN) --query 'Listeners[1].ListenerArn' --output text)
         echo $Listner_ARN
