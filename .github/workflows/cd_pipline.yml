@@ -95,9 +95,9 @@ jobs:
         echo $DNS_Name
         LB_ARN=$(aws elb describe-load-balancers --query "LoadBalancers[?DNSName=='$DNS_Name'].LoadBalancerArn" --output text)
         echo $LB_ARN
-        Listner_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $(LB_ARN) --query 'Listeners[1].ListenerArn' --output text)
+        Listner_ARN=$(aws elb describe-listeners --load-balancer-arn $(LB_ARN) --query 'Listeners[1].ListenerArn' --output text)
         echo $Listner_ARN
-        aws elbv2 modify-listener --listener-arn $Listner_ARN --protocol HTTPS --port 443 --certificates CertificateArn=$CERT_ARN
+        aws elb modify-listener --listener-arn $Listner_ARN --protocol HTTPS --port 443 --certificates CertificateArn=$CERT_ARN
         
 
 #        aws route53 change-resource-record-sets --hosted-zone-id ZXXXXXXXXXXXXXX \ --change-batch  # Replace with your Hosted Zone ID
