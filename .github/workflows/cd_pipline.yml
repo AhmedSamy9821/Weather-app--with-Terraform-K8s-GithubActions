@@ -85,6 +85,31 @@ jobs:
         kubectl get pods 
         kubectl get svc  
         kubectl get svc  
+
+    - name: create record for domain
+      run: |
+        HostedZone=$(aws route53 list-hosted-zones-by-name --dns-name "ahmedsamy.link" --query "HostedZones[0].Id" --output text)
+        DNS_Name=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        LB_hostedzone=$(aws elb describe-load-balancers --query "LoadBalancerDescriptions[?DNSName=='$DNS_Name'].CanonicalHostedZoneNameID" --output text)
+        aws route53 change-resource-record-sets \
+        --hosted-zone-id $HostedZone \
+        --change-batch '{
+           "Changes": [
+                  {
+                    "Action": "CREATE",
+                    "ResourceRecordSet": {
+                    "Name": "dev.weather.ahmedsamy.link",
+                    "Type": "A",
+                    "AliasTarget": {
+                    "HostedZoneId": "$LB_hostedzone",
+                    "DNSName": "$DNS_Name",
+                    "EvaluateTargetHealth": false
+                    }
+                   }
+                  }
+                ]
+               }'
+
     - name: Encrypt the traffic between client and aws load balance using https
       run: |
         HttpInstancePort=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.spec.ports[0].nodePort}')
