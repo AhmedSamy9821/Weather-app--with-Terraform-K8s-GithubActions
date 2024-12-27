@@ -41,7 +41,7 @@ jobs:
         kubectl apply -f ./Kubernetes/auth/mysql/mysql_statfulset.yml
         kubectl get pods 
         kubectl get svc
-
+    
     - name: Run the init job to create the auth service user
       run: |
         kubectl wait --for=condition=ready pod/mysql-0 --timeout=120s
@@ -83,7 +83,7 @@ jobs:
         kubectl wait --for=condition=available deployment/weatherapp-ui
         kubectl get pods 
         kubectl get svc
-
+    
     - name: attach the ingress load balancer with domain and encrypt the traffic using https
       run: |
         HttpInstancePort=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.spec.ports[0].nodePort}')
