@@ -1,6 +1,7 @@
 name: CD pipline
 on:
   workflow_dispatch:
+  workflow_dispatch:
       
 jobs:
   build:
@@ -41,6 +42,7 @@ jobs:
         kubectl apply -f ./Kubernetes/auth/mysql/mysql_statfulset.yml
         kubectl get pods 
         kubectl get svc
+    
     
     - name: Run the init job to create the auth service user
       run: |
@@ -83,6 +85,7 @@ jobs:
         kubectl wait --for=condition=available deployment/weatherapp-ui
         kubectl get pods 
         kubectl get svc  
+        kubectl get svc  
     - name: attach the ingress load balancer with domain and encrypt the traffic using https
       run: |
         HttpInstancePort=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.spec.ports[0].nodePort}')
@@ -90,7 +93,9 @@ jobs:
         CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='dev.weather.ahmedsamy.link'].CertificateArn" --output text)
         echo $CERT_ARN
         DNS_Name=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' --output text)
+        DNS_Name=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' --output text)
         echo $DNS_Name
+        LB_Name=$(aws elb describe-load-balancers --query "LoadBalancerDescriptions[?DNSName=='$DNS_Name'].LoadBalancerName" --output text)
         LB_Name=$(aws elb describe-load-balancers --query "LoadBalancerDescriptions[?DNSName=='$DNS_Name'].LoadBalancerName" --output text)
         echo $LB_ARN
         
