@@ -1,6 +1,14 @@
 name: CD pipline
 on:
   workflow_dispatch:
+    inputs:
+            env:
+                description: Environment
+                required: true
+                type: choice
+                options:
+                    - prod
+                    - dev
       
 jobs:
   build:
@@ -18,7 +26,7 @@ jobs:
         aws-region: eu-north-1
 
     - name: join the eks cluster
-      run: aws eks --region eu-north-1 update-kubeconfig --name weather-cluster-dev
+      run: aws eks --region eu-north-1 update-kubeconfig --name weather-cluster-${{inputs.env}} 
 
     - name: install nginx ingress controller
       run: |
@@ -63,10 +71,6 @@ jobs:
         kubectl get pods 
         kubectl get svc
 
-   # - name: Test that the auth service is running
-    #  run: |
-     #   kubectl run alpine --rm -it --image=curlimages/curl:latest -- curl -X POST http://weatherapp-auth:8080/users -H "Content-Type: application/json" -d '{"user_name": "backendtest", "user_password": "testpassword"}'
-
     - name: deploy backend service
       run: |
         kubectl apply -f ./Kubernetes/backend/weather_secret.yml
@@ -83,14 +87,14 @@ jobs:
         kubectl apply -f ./Kubernetes/UI/ui_ingress.yml
         kubectl wait --for=condition=available deployment/weatherapp-ui
         kubectl get pods 
-        kubectl get svc  
-        kubectl get svc  
+        kubectl get svc   
 
     - name: create record for domain
       run: |
         HostedZone=$(aws route53 list-hosted-zones-by-name --dns-name "ahmedsamy.link" --query "HostedZones[0].Id" --output text)
         DNS_Name=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
         LB_hostedzone=$(aws elb describe-load-balancers --query "LoadBalancerDescriptions[?DNSName=='$DNS_Name'].CanonicalHostedZoneNameID" --output text)
+        domain=$([ "${{inputs.env}}" = "dev" ] && echo "dev.weather.ahmedsamy.link" || echo "weather.ahmedsamy.link")
         aws route53 change-resource-record-sets \
         --hosted-zone-id $HostedZone \
         --change-batch '{
@@ -98,7 +102,7 @@ jobs:
                   {
                     "Action": "CREATE",
                     "ResourceRecordSet": {
-                    "Name": "dev.weather.ahmedsamy.link",
+                    "Name": "'$domain'", #
                     "Type": "A",
                     "AliasTarget": {
                     "HostedZoneId": "'$LB_hostedzone'",
@@ -112,37 +116,13 @@ jobs:
 
     - name: Encrypt the traffic between client and aws load balance using https
       run: |
+        domain=$([ "${{inputs.env}}" = "dev" ] && echo "dev.weather.ahmedsamy.link" || echo "weather.ahmedsamy.link")
         HttpInstancePort=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.spec.ports[0].nodePort}')
-        echo $HttpInstancePort
-        CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='dev.weather.ahmedsamy.link'].CertificateArn" --output text)
-        echo $CERT_ARN
+        CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='$domain'].CertificateArn" --output text)
         DNS_Name=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-        echo $DNS_Name
         LB_Name=$(aws elb describe-load-balancers --query "LoadBalancerDescriptions[?DNSName=='$DNS_Name'].LoadBalancerName" --output text)
-        echo $LB_Name
-        
+
         aws elb delete-load-balancer-listeners --load-balancer-name $LB_Name --load-balancer-ports 443
         aws elb delete-load-balancer-listeners --load-balancer-name $LB_Name --load-balancer-ports 80
         aws elb create-load-balancer-listeners --load-balancer-name $LB_Name --listeners Protocol=HTTPS,LoadBalancerPort=443,InstanceProtocol=HTTP,InstancePort=$HttpInstancePort,SSLCertificateId=$CERT_ARN
         
-       # HostedZone=$(aws route53 list-hosted-zones-by-name --dns-name "ahmedsamy.link" --query "HostedZones[0].Id" --output text)
-       # LB_hostedzone=$(aws elbv2 describe-load-balancers --query "LoadBalancers[?DNSName=='<DNS_NAME>'].CanonicalHostedZoneId" --output text)
-
-       # aws route53 change-resource-record-sets \
-      #  --hosted-zone-id $HostedZone \
-      #  --change-batch '{
-      #    "Changes": [
-          #   {
-       # "Action": "CREATE",
-       # "ResourceRecordSet": {
-       #   "Name": "dev.weather.ahmedsamy.link",
-       #   "Type": "A",
-       #   "AliasTarget": {
-       #     "HostedZoneId": "$LB_hostedzone",
-       #     "DNSName": "$DNS_Name",
-       #     "EvaluateTargetHealth": false
-       #   }
-      #  }
-     # }
- #   #]
- # #}'
