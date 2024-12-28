@@ -37,8 +37,6 @@ This project uses GitHub Actions workflows to automate infrastructure provisioni
   3. Creates DNS records for the domain and attaches certificates to secure traffic using HTTPS.
 - **Environment-Based**: Supports deployment to production or development environments by selecting the environment from the Environment list.
 
-## Architecture Diagram
-Refer to **Archeticture.png** for a visual representation of the system architecture.
 
 ## Deployment Steps
 1. Run the **Infrastructure Pipeline** to set up the infrastructure.
