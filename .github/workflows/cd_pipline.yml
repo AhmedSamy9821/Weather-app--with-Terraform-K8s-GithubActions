@@ -101,8 +101,8 @@ jobs:
                     "Name": "dev.weather.ahmedsamy.link",
                     "Type": "A",
                     "AliasTarget": {
-                    "HostedZoneId": "$LB_hostedzone",
-                    "DNSName": "$DNS_Name",
+                    "HostedZoneId": "'$LB_hostedzone'",
+                    "DNSName": "'$DNS_Name'",
                     "EvaluateTargetHealth": false
                     }
                    }
