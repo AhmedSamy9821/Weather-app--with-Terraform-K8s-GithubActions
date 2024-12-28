@@ -133,7 +133,7 @@ resource "aws_eks_node_group" "weather-nodegroup" {
 
 #Attach EBS managed policy to IAM role which associated to aws-ebs-csi-driver add-on 
 resource "aws_iam_role" "EBS-role" {
-  name = "AmazonEKS_EBS_CSI_DriverRole"
+  name = "AmazonEKS_EBS_CSI_DriverRole-for-${var.env}"
 
   assume_role_policy = jsonencode({
             "Version": "2012-10-17",
