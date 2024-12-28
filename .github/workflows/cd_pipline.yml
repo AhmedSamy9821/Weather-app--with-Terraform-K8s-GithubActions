@@ -102,7 +102,7 @@ jobs:
                   {
                     "Action": "CREATE",
                     "ResourceRecordSet": {
-                    "Name": "'$domain'", #
+                    "Name": "'$domain'",
                     "Type": "A",
                     "AliasTarget": {
                     "HostedZoneId": "'$LB_hostedzone'",
