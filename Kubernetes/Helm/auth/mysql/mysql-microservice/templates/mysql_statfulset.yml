@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .values.mysql-statefulset.name }}
+  name: {{ .values.mysqlStatefulset.name }}
 spec:
   serviceName: {{ .values.mysql-service.name}}
-  replicas: {{ .values.mysql-statefulset.replicas }}
+  replicas: {{ .values.mysqlStatefulset.replicas }}
   selector:
     matchLabels:
-      app: {{ .values.mysql-statefulset.labels.app }}
+      app: {{ .values.mysqlStatefulset.labels.app }}
   template:
     metadata:
       labels:
-        app: {{ .values.mysql-statefulset.labels.app }}
+        app: {{ .values.mysqlStatefulset.labels.app }}
     spec:
       containers:
-      - name: {{ .values.mysql-statefulset.containers.app }}
-        image: {{ .values.mysql-statefulset.containers.image }}
+      - name: {{ .values.mysqlStatefulset.containers.app }}
+        image: {{ .values.mysqlStatefulset.containers.image }}
         ports:
-        - containerPort: {{ .values.mysql-statefulset.containers.port }}
+        - containerPort: {{ .values.mysqlStatefulset.containers.port }}
         env: 
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
@@ -26,10 +26,10 @@ spec:
               key: root-password
   volumeClaimTemplates:
   - metadata:
-      name: {{ .values.mysql-statefulset.pvc.name }}
+      name: {{ .values.mysqlStatefulset.pvc.name }}
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: {{ .values.mysql-storage-class.name }}
       resources:
         requests:
-          storage: {{ .values.mysql-statefulset.pvc.storage }}
+          storage: {{ .values.mysqlStatefulset.pvc.storage }}
