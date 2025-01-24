@@ -1,0 +1,24 @@
+mysql-storage-class:
+  name: ebs-gp2
+
+mysql-service:
+  name: mysql
+  labels:
+    app: mysql
+  port: 3306
+
+mysql-statefulset:
+  name: mysql-statefulset
+  replicas: 1
+  labels:
+    app: mysql
+  containers:
+    name: mysql-container
+    image: mysql:latest 
+    port: 3306
+  pvc:
+    name: mysql-persistent-storage
+    storage: 10G
+
+mysql-init-job:
+  name: mysql-init-job

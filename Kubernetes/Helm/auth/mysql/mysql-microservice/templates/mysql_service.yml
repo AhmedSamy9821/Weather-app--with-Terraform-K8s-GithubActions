@@ -1,0 +1,13 @@
+#headless service for mysql
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .values.mysql-service.name}}
+  labels:
+    app: {{ .values.mysql-service.labels.app}}
+spec:
+  ports:
+    - port: {{ .values.mysql-service.port }}
+  clusterIP: None
+  selector:
+    app: {{ .values.mysql-service.labels.app}}

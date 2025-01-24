@@ -1,0 +1,51 @@
+name: CD pipline
+on:
+  workflow_dispatch:
+    inputs:
+            env:
+                description: Environment
+                required: true
+                type: choice
+                options:
+                    - prod
+                    - dev
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{secrets.AWS_ACCESS_KEY}}
+        aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        aws-region: eu-north-1
+
+    - name: join the eks cluster
+      run: aws eks --region eu-north-1 update-kubeconfig --name weather-cluster-${{inputs.env}} 
+
+    - name: install nginx ingress controller
+      run: |
+        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.0-beta.0/deploy/static/provider/cloud/deploy.yaml
+        kubectl wait --namespace ingress-nginx \
+        --for=condition=ready pod \
+        --selector=app.kubernetes.io/component=controller \
+        --timeout=120s
+        kubectl get pods --namespace=ingress-nginx
+
+
+    - name: Create mysql-secret
+      run: kubectl create secret generic mysql-secret  --from-literal=root-password='${{secrets.MYSQL_ROOT_PASSWORD}}' --from-literal=auth-password='${{secrets.MYSQL_AUTH_PASSWORD}}' --from-literal=secret-key='${{secrets.AUTH_SECRET_KEY}}'
+      continue-on-error: true
+
+    - name: deploy mysql
+      run: |
+        helm install mysql-microservice-1 ./Kubernetes/Helm/auth/mysql/mysql-microservice --wait
+        kubectl get pods 
+        kubectl get svc
+    
+  

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .values.mysql-statefulset.name }}
+spec:
+  serviceName: {{ .values.mysql-service.name}}
+  replicas: {{ .values.mysql-statefulset.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .values.mysql-statefulset.labels.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .values.mysql-statefulset.labels.app }}
+    spec:
+      containers:
+      - name: {{ .values.mysql-statefulset.containers.app }}
+        image: {{ .values.mysql-statefulset.containers.image }}
+        ports:
+        - containerPort: {{ .values.mysql-statefulset.containers.port }}
+        env: 
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: root-password
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .values.mysql-statefulset.pvc.name }}
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: {{ .values.mysql-storage-class.name }}
+      resources:
+        requests:
+          storage: {{ .values.mysql-statefulset.pvc.storage }}

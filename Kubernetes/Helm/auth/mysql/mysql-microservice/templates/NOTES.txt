@@ -1,0 +1,5 @@
+This package is for dyploying Mysql 
+
+Auth microservice is use mysql microservice to store users credentials
+
+This package is responsible for dyploying storage class and statfulset and statless service and init job which create auth user and database on mysql
