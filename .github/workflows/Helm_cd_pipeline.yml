@@ -1,4 +1,4 @@
-name: CD pipline
+name: Helm CD pipline
 on:
   workflow_dispatch:
     inputs:
