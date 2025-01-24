@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ .values.mysqlStatefulset.name }}
 spec:
-  serviceName: {{ .values.mysql-service.name}}
+  serviceName: {{ .values.mysqlService.name}}
   replicas: {{ .values.mysqlStatefulset.replicas }}
   selector:
     matchLabels:
@@ -29,7 +29,7 @@ spec:
       name: {{ .values.mysqlStatefulset.pvc.name }}
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: {{ .values.mysql-storage-class.name }}
+      storageClassName: {{ .values.mysqlStorageClass.name }}
       resources:
         requests:
           storage: {{ .values.mysqlStatefulset.pvc.storage }}

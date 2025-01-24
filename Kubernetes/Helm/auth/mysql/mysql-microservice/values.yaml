@@ -1,7 +1,7 @@
-mysql-storage-class:
+mysqlStorageClass:
   name: ebs-gp2
 
-mysql-service:
+mysqlService:
   name: mysql
   labels:
     app: mysql
@@ -20,5 +20,5 @@ mysqlStatefulset:
     name: mysql-persistent-storage
     storage: 10G
 
-mysql-init-job:
+mysqlInitJob:
   name: mysql-init-job
