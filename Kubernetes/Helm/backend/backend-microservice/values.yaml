@@ -9,6 +9,6 @@ backend-service:
   name: weatherapp-backend-service
   type: ClusterIP
 
-weahterapp-secret:
+weahterappSecret:
   name: weather-secret
   apikey: "default"
