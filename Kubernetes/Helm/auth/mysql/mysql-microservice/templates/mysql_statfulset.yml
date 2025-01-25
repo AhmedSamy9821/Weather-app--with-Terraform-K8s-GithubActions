@@ -14,7 +14,7 @@ spec:
         app: {{ .Values.mysqlStatefulset.labels.app }}
     spec:
       containers:
-      - name: {{ .Values.mysqlStatefulset.containers.app }}
+      - name: {{ .Values.mysqlStatefulset.containers.name }}
         image: mysql:latest 
         ports:
         - containerPort: {{ .Values.mysqlStatefulset.containers.port }}
