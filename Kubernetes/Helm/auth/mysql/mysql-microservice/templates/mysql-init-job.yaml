@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .values.mysqlInitJob.name }}
+  name: {{ .Values.mysqlInitJob.name }}
 spec:
   template:
     spec:

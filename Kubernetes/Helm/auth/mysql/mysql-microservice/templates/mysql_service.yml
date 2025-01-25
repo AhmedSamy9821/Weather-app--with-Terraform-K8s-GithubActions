@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .values.mysqlService.name}}
+  name: {{ .Values.mysqlService.name}}
   labels:
-    app: {{ .values.mysqlService.labels.app}}
+    app: {{ .Values.mysqlService.labels.app}}
 spec:
   ports:
-    - port: {{ .values.mysqlService.port }}
+    - port: {{ .Values.mysqlService.port }}
   clusterIP: None
   selector:
-    app: {{ .values.mysqlService.labels.app}}
+    app: {{ .Values.mysqlService.labels.app}}
