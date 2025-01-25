@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.authService.name}}
+spec:
+  type: {{ .Values.authService.type }}
+  ports:
+    - port: {{ .Values.authDeployment.containers.port }}
+      targetPort: {{ .Values.authDeployment.containers.port }}
+      protocol: TCP
+  selector:
+    name: {{ .Values.authDeployment.containers.name }}

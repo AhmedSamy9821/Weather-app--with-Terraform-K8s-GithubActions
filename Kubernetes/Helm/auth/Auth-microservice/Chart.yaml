@@ -1,6 +1,6 @@
 apiVersion: v2
 name: Auth-microservice
-description: A Auth chart for weahterapp
+description: A Auth charts for weahterapp
 
 # A chart can be either an 'application' or a 'library' chart.
 #
