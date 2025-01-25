@@ -65,3 +65,42 @@ jobs:
         helm install ui-microservice-1 ./Kubernetes/Helm/UI/ui-microservice  --wait
         kubectl get pods 
         kubectl get svc
+
+    - name: create record for domain
+      run: |
+        HostedZone=$(aws route53 list-hosted-zones-by-name --dns-name "ahmedsamy.link" --query "HostedZones[0].Id" --output text)
+        DNS_Name=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        LB_hostedzone=$(aws elb describe-load-balancers --query "LoadBalancerDescriptions[?DNSName=='$DNS_Name'].CanonicalHostedZoneNameID" --output text)
+        domain=$([ "${{inputs.env}}" = "dev" ] && echo "dev.weather.ahmedsamy.link" || echo "weather.ahmedsamy.link")
+        aws route53 change-resource-record-sets \
+        --hosted-zone-id $HostedZone \
+        --change-batch '{
+            "Changes": [
+                {
+                    "Action": "CREATE",
+                    "ResourceRecordSet": {
+                    "Name": "'$domain'",
+                    "Type": "A",
+                    "AliasTarget": {
+                    "HostedZoneId": "'$LB_hostedzone'",
+                    "DNSName": "'$DNS_Name'",
+                    "EvaluateTargetHealth": false
+                    }
+                    }
+                }
+                ]
+        }'
+        
+    - name: Encrypt the traffic between client and aws load balance using https
+      run: |
+        domain=$([ "${{inputs.env}}" = "dev" ] && echo "dev.weather.ahmedsamy.link" || echo "weather.ahmedsamy.link")
+        HttpInstancePort=$(kubectl get svc -n ingress-nginx ingress-nginx-controller -o jsonpath='{.spec.ports[0].nodePort}')
+        CERT_ARN=$(aws acm list-certificates --query "CertificateSummaryList[?DomainName=='$domain'].CertificateArn" --output text)
+        DNS_Name=$(kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        LB_Name=$(aws elb describe-load-balancers --query "LoadBalancerDescriptions[?DNSName=='$DNS_Name'].LoadBalancerName" --output text)
+
+        aws elb delete-load-balancer-listeners --load-balancer-name $LB_Name --load-balancer-ports 443
+        aws elb delete-load-balancer-listeners --load-balancer-name $LB_Name --load-balancer-ports 80
+        aws elb create-load-balancer-listeners --load-balancer-name $LB_Name --listeners Protocol=HTTPS,LoadBalancerPort=443,InstanceProtocol=HTTP,InstancePort=$HttpInstancePort,SSLCertificateId=$CERT_ARN
+        
+
