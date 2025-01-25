@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       labels:
-        name: weatherapp-backend
+        name:  {{ .Values.backendDeployment.containers.name }}
     spec:
       containers:
         - name: {{ .Values.backendDeployment.containers.name }}
@@ -24,7 +24,7 @@ spec:
                 key: apikey
           ports:
             - name: http
-              containerPort: {{ .Values.backendDeployment.containers.port }}
+              containerPort: {{ .Values.backendDeployment.containers.Port }}
               protocol: TCP
           livenessProbe:
             httpGet:
