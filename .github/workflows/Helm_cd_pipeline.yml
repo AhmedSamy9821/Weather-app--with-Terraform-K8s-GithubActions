@@ -49,8 +49,7 @@ jobs:
         kubectl get svc
 
     - name: Ensure that our user has access to the weahterapp database
-      run: |
-        kubectl exec -it mysql-statefulset-0 -- mysql -u authuser -p${{secrets.MYSQL_AUTH_PASSWORD}} -e "SHOW DATABASES; USE weatherapp; SHOW TABLES;"
+      run: kubectl exec -it mysql-statefulset-0 -- mysql -u authuser -p${{secrets.MYSQL_AUTH_PASSWORD}} -e "SHOW DATABASES; USE weatherapp; SHOW TABLES;"
 
     - name: deploy Auth microservice
       run: |
