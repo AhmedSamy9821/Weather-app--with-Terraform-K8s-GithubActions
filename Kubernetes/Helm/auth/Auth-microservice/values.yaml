@@ -6,5 +6,5 @@ authDeployment:
     port: 8080
 
 authService:
-  name: weatherapp-auth-service
+  name: weatherapp-auth
   type: ClusterIP

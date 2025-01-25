@@ -6,7 +6,7 @@ backendDeployment:
     Port: 5000
 
 backendService:
-  name: weatherapp-backend-service
+  name: weatherapp-backend
   type: ClusterIP
 
 weahterappSecret:
