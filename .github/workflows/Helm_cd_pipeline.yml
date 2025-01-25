@@ -48,10 +48,9 @@ jobs:
         kubectl get pods 
         kubectl get svc
 
-        
     - name: deploy Auth microservice
       run: |
-        helm install auth-microservice-1 ./Kubernetes/Helm/auth/mysql/Auth-microservice --wait
+        helm install auth-microservice-1 .\Kubernetes\Helm\auth\Auth-microservice --wait
         kubectl get pods 
         kubectl get svc
     
