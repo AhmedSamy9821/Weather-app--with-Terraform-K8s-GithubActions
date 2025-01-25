@@ -56,7 +56,7 @@ jobs:
     
     - name: deploy backend microservice
       run: |
-        helm install backend-microservice-1 ./Kubernetes/Helm/backend/backend-microservice --set  apikey='${{secrets.APIKEY}}' --wait
+        helm install backend-microservice-1 ./Kubernetes/Helm/backend/backend-microservice --set apikey='${{secrets.APIKEY}}' --wait
         kubectl get pods 
         kubectl get svc
   
