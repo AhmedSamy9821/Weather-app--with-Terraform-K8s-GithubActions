@@ -50,7 +50,7 @@ jobs:
 
     - name: deploy Auth microservice
       run: |
-        helm install auth-microservice-1 .\Kubernetes\Helm\auth\Auth-microservice --wait
+        helm install auth-microservice-1 ./Kubernetes/Helm/auth/Auth-microservice --wait
         kubectl get pods 
         kubectl get svc
     
