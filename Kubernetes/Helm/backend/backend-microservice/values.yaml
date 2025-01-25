@@ -1,0 +1,14 @@
+backend-deployment:
+  name: weatherapp-backend-deployment
+  replicas: 2
+  containers:
+    name:  weatherapp-backend-pod
+    Port: 5000
+
+backend-service:
+  name: weatherapp-backend-service
+  type: ClusterIP
+
+weahterapp-secret:
+  name: weather-secret
+  apikey: "default"

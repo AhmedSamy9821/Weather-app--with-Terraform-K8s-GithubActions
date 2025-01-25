@@ -1,0 +1,5 @@
+This package is for dyploying Backend microservice 
+
+Backend microservice is used for fetching the weather
+
+This package is responsible for dyploying deployment and cluster ip service

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.backend-deployment.name}}
+spec:
+  replicas: {{ .Values.backend-deployment.replicas }}
+  selector:
+    matchLabels:
+      name: {{ .Values.backend-deployment.containers.name }}
+  template:
+    metadata:
+      labels:
+        name: weatherapp-backend
+    spec:
+      containers:
+        - name: {{ .Values.backend-deployment.containers.name }}
+          image: ahmedsamy98/app-weather:latest
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: APIKEY
+            valueFrom:
+              secretKeyRef:
+                name: weather-secret
+                key: apikey
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend-deployment.containers.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          
