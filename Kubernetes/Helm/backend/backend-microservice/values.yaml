@@ -1,5 +1,5 @@
 backendDeployment:
-  name: weatherapp-backendDeployment
+  name: weatherapp-backend-deployment
   replicas: 2
   containers:
     name:  weatherapp-backend-pod
@@ -11,4 +11,3 @@ backendService:
 
 weahterappSecret:
   name: weather-secret
-  apikey: "default"

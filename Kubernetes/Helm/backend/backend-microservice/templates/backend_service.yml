@@ -5,7 +5,7 @@ metadata:
 spec:
   type: {{ .Values.backendService.type }}
   ports:
-    - port:  {{ .Values.backendDeployment.containers.port }}
+    - port:  {{ .Values.backendDeployment.containers.Port }}
       targetPort: http
       protocol: TCP
       name: http
