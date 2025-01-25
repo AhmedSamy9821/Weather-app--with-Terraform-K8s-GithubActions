@@ -1,5 +1,5 @@
-backend-deployment:
-  name: weatherapp-backend-deployment
+backendDeployment:
+  name: weatherapp-backendDeployment
   replicas: 2
   containers:
     name:  weatherapp-backend-pod
