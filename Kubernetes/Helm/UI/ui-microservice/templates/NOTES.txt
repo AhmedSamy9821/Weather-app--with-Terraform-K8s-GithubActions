@@ -1,0 +1,5 @@
+This package is for dyploying UI microservice 
+
+Backend microservice is used for interact with the client
+
+This package is responsible for dyploying deployment and cluster ip service and nginx ingress 

@@ -1,0 +1,11 @@
+uiweather:
+  replicas: 2
+  containers:
+    name: weatherapp-ui
+    Port: 3000
+
+uiweatherService:
+  type: ClusterIP
+
+ingress:
+  ingressCN: nginx

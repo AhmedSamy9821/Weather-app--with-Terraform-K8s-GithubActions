@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: weatherapp-ui-ingress
 spec:
-  ingressClassName: nginx
+  ingressClassName: {{ .Values.ingress.ingressCN}}
   rules:
     - http:
         paths:
@@ -13,4 +13,4 @@ spec:
               service:
                 name: weatherapp-ui
                 port:
-                  number: 3000
+                  number: {{ .Values.uiweather.containers.Port }}

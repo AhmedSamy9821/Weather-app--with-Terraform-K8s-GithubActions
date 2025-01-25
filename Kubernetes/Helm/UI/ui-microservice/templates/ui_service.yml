@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: weatherapp-ui
 spec:
-  type: ClusterIP
+  type: {{ .Values.uiweatherService.type }}
   ports:
-    - port: 3000
+    - port:  {{ .Values.uiweather.containers.Port }}
       targetPort: http
       protocol: TCP
       name: http
   selector:
-    name: weatherapp-ui
+    name: {{ .Values.uiweather.containers.name }}
