@@ -44,7 +44,7 @@ jobs:
 
     - name: deploy mysql
       run: |
-        helm install mysql-microservice-1 ./Kubernetes/Helm/auth/mysql/mysql-microservice --wait
+        helm install mysql-microservice-2 ./Kubernetes/Helm/auth/mysql/mysql-microservice --wait
         kubectl get pods 
         kubectl get svc
     
