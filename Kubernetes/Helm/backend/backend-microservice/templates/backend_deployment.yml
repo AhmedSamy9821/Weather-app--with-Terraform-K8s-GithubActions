@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.backend-deployment.name}}
+  name: {{ .Values.backendDeployment.name}}
 spec:
-  replicas: {{ .Values.backend-deployment.replicas }}
+  replicas: {{ .Values.backendDeployment.replicas }}
   selector:
     matchLabels:
-      name: {{ .Values.backend-deployment.containers.name }}
+      name: {{ .Values.backendDeployment.containers.name }}
   template:
     metadata:
       labels:
         name: weatherapp-backend
     spec:
       containers:
-        - name: {{ .Values.backend-deployment.containers.name }}
+        - name: {{ .Values.backendDeployment.containers.name }}
           image: ahmedsamy98/app-weather:latest
           imagePullPolicy: IfNotPresent
           env:
@@ -24,7 +24,7 @@ spec:
                 key: apikey
           ports:
             - name: http
-              containerPort: {{ .Values.backend-deployment.containers.port }}
+              containerPort: {{ .Values.backendDeployment.containers.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
