@@ -8,7 +8,7 @@ mysqlService:
   port: 3306
 
 mysqlStatefulset:
-  name: mysqlStatefulset
+  name: mysql-statefulset
   replicas: 1
   labels:
     app: mysql
