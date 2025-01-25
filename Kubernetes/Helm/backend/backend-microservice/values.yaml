@@ -5,7 +5,7 @@ backendDeployment:
     name:  weatherapp-backend-pod
     Port: 5000
 
-backend-service:
+backendService:
   name: weatherapp-backend-service
   type: ClusterIP
 
